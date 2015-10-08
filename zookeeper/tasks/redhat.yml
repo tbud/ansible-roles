@@ -1,13 +1,13 @@
 ---
-- name: redhat | Create system user
+- name: redhat | Create system group
   group: >
-   name={{zookeeper_inst.group}}
-   state=present
+    name={{zookeeper_inst.group}}
+    state=present
 
 - name: redhat | Create system user
   user: >
-   name={{zookeeper_inst.user}}
-   state=present
+    name={{zookeeper_inst.user}}
+    state=present
 
 - name: redhat | Extract the Version from Download URL to use in Play
   command: echo {{zookeeper_inst.downloadURL | basename | regex_replace('^zookeeper-(.*).tar.gz$', '\\1')}}
@@ -15,73 +15,73 @@
 
 - name: redhat | Print Version
   debug: >
-   msg="Got Version {{version.stdout}}"
+    msg="Got Version {{version.stdout}}"
 
 - name: redhat | Download ZooKeeper
   get_url: >
-   url={{zookeeper_inst.downloadURL}}
-   dest={{zookeeper_inst.inst_dir}}
-   mode=0440
+    url={{zookeeper_inst.downloadURL}}
+    dest={{zookeeper_inst.inst_dir}}
+    mode=0440
 
 - name: redhat | Extract ZooKeeper from Download
   unarchive: >
-   src={{zookeeper_inst.inst_dir}}/{{zookeeper_inst.downloadURL | basename}}
-   dest={{zookeeper_inst.inst_dir}}
-   copy=no
-   creates={{zookeeper_inst.inst_dir}}/zookeeper-{{version.stdout}}
+    src={{zookeeper_inst.inst_dir}}/{{zookeeper_inst.downloadURL | basename}}
+    dest={{zookeeper_inst.inst_dir}}
+    copy=no
+    creates={{zookeeper_inst.inst_dir}}/zookeeper-{{version.stdout}}
 
 - name: redhat | Create symlink
   file: >
-   src={{zookeeper_inst.inst_dir}}/zookeeper-{{version.stdout}}
-   dest={{zookeeper_inst.inst_dir}}/zookeeper
-   state=link
+    src={{zookeeper_inst.inst_dir}}/zookeeper-{{version.stdout}}
+    dest={{zookeeper_inst.inst_dir}}/zookeeper
+    state=link
 
 - name: redhat | Copy the main zoo.cfg configuration file
   template: >
-   src=redhat/{{version.stdout}}/zoo.cfg.j2
-   dest={{zookeeper_inst.inst_dir}}/zookeeper/conf/zoo.cfg
+    src=redhat/{{version.stdout}}/zoo.cfg.j2
+    dest={{zookeeper_inst.inst_dir}}/zookeeper/conf/zoo.cfg
 
 - name: redhat | Copy log4j.properties
   template: >
-   src=redhat/log4j.properties.j2
-   dest={{zookeeper_inst.inst_dir}}/zookeeper/conf/log4j.properties
+    src=redhat/log4j.properties.j2
+    dest={{zookeeper_inst.inst_dir}}/zookeeper/conf/log4j.properties
 
 - name: redhat | Copy zkServer.sh server control script
   template: >
-   src=redhat/zkServer.sh.j2
-   dest={{zookeeper_inst.inst_dir}}/zookeeper/bin/zkServer.sh
-   owner={{zookeeper_inst.user}}
-   group={{zookeeper_inst.group}}
-   mode=0755
+    src=redhat/zkServer.sh.j2
+    dest={{zookeeper_inst.inst_dir}}/zookeeper/bin/zkServer.sh
+    owner={{zookeeper_inst.user}}
+    group={{zookeeper_inst.group}}
+    mode=0755
 
 - name: redhat | Create Empty dataDir directory
   file: >
-   path={{zookeeperZooCfg.dataDir}}
-   state=directory
+    path={{zookeeperZooCfg.dataDir}}
+    state=directory
 
 - name: redhat | Create the server myid file in cluster setup
   template: >
-   src=redhat/myid.j2
-   dest='{{zookeeperZooCfg.dataDir}}/myid'
+    src=redhat/myid.j2
+    dest='{{zookeeperZooCfg.dataDir}}/myid'
   when: zookeeperZooCfg is defined and zookeeperZooCfg.servers is defined
 
 - name: redhat | Create log directory
   file: >
-   path={{zookeeper_inst.inst_dir}}/zookeeper-{{version.stdout}}/log
-   state=directory
+    path={{zookeeper_inst.inst_dir}}/zookeeper-{{version.stdout}}/log
+    state=directory
 
 - name: redhat | Set install dir permissions
   file: >
-   path={{zookeeper_inst.inst_dir}}/zookeeper-{{version.stdout}}
-   owner={{zookeeper_inst.user}}
-   group={{zookeeper_inst.group}}
-   recurse=yes
-   state=directory
+    path={{zookeeper_inst.inst_dir}}/zookeeper-{{version.stdout}}
+    owner={{zookeeper_inst.user}}
+    group={{zookeeper_inst.group}}
+    recurse=yes
+    state=directory
 
 - name: redhat | Set dataDir permissions
   file: >
-   path={{zookeeperZooCfg.dataDir}}
-   owner={{zookeeper_inst.user}}
-   group={{zookeeper_inst.group}}
-   recurse=yes
-   state=directory
+    path={{zookeeperZooCfg.dataDir}}
+    owner={{zookeeper_inst.user}}
+    group={{zookeeper_inst.group}}
+    recurse=yes
+    state=directory
