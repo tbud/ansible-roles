@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  author: peace0phmind
+  description: spring boot auto deploy role
+  company: tbud
+  license: Apache
+  min_ansible_version: 1.2
+  platforms:
+  - name: EL
+    versions:
+    - 6
+    - 7
+  categories:
+  - web
+dependencies: []
