@@ -1,2 +1,20 @@
 ---
 # tasks file for spring-boot
+
+- name: Copy conf file
+  template: >
+    src=conf.j2
+    dest={{spring_boot.workPath}}/{{spring_boot.appName}}.conf
+
+- name: Create init.d symlink
+  file: >
+    src={{spring_boot.workPath}}/{{spring_boot.appName}}.jar
+    dest=/etc/init.d/{{spring_boot.appName}}
+    force=yes
+    state=link
+
+- name: Copy jmx password file
+  template: >
+    src=jmxremote.password.j2
+    dest=/opt/jdk1.8.0_60/jre/lib/management/jmxremote.password
+    mode=0700

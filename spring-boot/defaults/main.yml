@@ -1,2 +1,5 @@
 ---
 # defaults file for spring-boot
+spring_boot:
+  activeProfile: produce
+  workPath: /apps
